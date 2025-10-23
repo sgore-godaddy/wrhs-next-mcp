@@ -8,10 +8,11 @@ MCP (Model Context Protocol) allows AI assistants to interact with external syst
 
 ## Features
 
-- 🔧 **Read-only API access** - Safely query Warehouse data
-- 🔐 **Basic authentication** - Secure API access with username/password
-- 🚀 **Zero-config TypeScript** - Built with tsup for easy development
-- 📦 **Easy distribution** - Share with your team via GitHub
+- 📦 **Query package versions** - Check which versions are deployed in dev, test, or production
+- 🔍 **List available versions** - See all published versions of any package
+- 🌍 **Discover environments** - Find out where packages are deployed
+- 📊 **Get environment details** - View environment-specific configurations
+- 🔄 **Compare deployments** - Easily compare what's in different environments
 
 ## Available Tools
 
@@ -35,9 +36,32 @@ Fetches head information for a specific name and environment (metadata without f
 - `name` (string, required): The name of the object
 - `env` (string, required): The environment (e.g., development, staging, production)
 
-## Installation
+### `list_versions`
 
-### For Team Members (GitHub Clone)
+Lists all available versions for a specific package.
+
+**Parameters:**
+
+- `name` (string, required): The name of the package (e.g., '@ux/application-sidebar')
+
+### `list_environments`
+
+Lists all environments where a specific package is deployed.
+
+**Parameters:**
+
+- `name` (string, required): The name of the package (e.g., '@ux/application-sidebar')
+
+### `get_environment_details`
+
+Fetches detailed information about a package in a specific environment, including metadata and configuration.
+
+**Parameters:**
+
+- `name` (string, required): The name of the package (e.g., '@ux/application-sidebar')
+- `env` (string, required): The environment (e.g., development, staging, production)
+
+## Installation
 
 1. **Clone the repository:**
 
@@ -60,7 +84,7 @@ Fetches head information for a specific name and environment (metadata without f
 
 4. **Configure Cursor:**
 
-   Add the following to your Cursor MCP settings (Settings → Features → Model Context Protocol):
+   Add the following to your Cursor MCP settings (**Settings... → Cursor Settings → Tools & MCP**):
 
    ```json
    {
@@ -96,8 +120,8 @@ npm run build
 
 ### Prerequisites
 
-- Node.js 18+
-- npm or yarn
+- Node.js 24+
+- npm
 - Access to Warehouse.ai API
 
 ### Local Development Setup
@@ -157,7 +181,7 @@ This opens a web UI where you can:
 
 1. Ensure the server is configured in Cursor (see Installation)
 2. Restart Cursor
-3. Check MCP connection status in Settings → Features → Model Context Protocol
+3. Check MCP connection status in **Settings... → Cursor Settings → Tools & MCP**
 4. Test by asking Cursor:
    - "Use the wrhs-api to get object named 'test'"
    - "Fetch head information for 'myapp' in 'production' environment"
@@ -203,7 +227,7 @@ wrhs-next-mcp/
 
 3. **Authentication**: Credentials are passed via environment variables in the Cursor config
 
-4. **API Client**: Uses the existing `warehouse.ai-api-client` npm package to interact with your API
+4. **API Client**: Uses the existing `warehouse.ai-api-client` npm package to interact with the warehouse API
 
 ## Troubleshooting
 
@@ -222,7 +246,7 @@ wrhs-next-mcp/
 - **Cause**: Build failed or server crashed
 - **Fix**:
   1. Run `npm run build` and check for errors
-  2. Check Cursor's MCP logs (Settings → Features → Model Context Protocol)
+  2. Check Cursor's MCP logs (**Settings... → Cursor Settings → Tools & MCP**)
 
 ### "Changes not reflecting"
 
@@ -233,48 +257,6 @@ wrhs-next-mcp/
 
 - **Cause**: Package not installed or not accessible
 - **Fix**: Ensure the package is available in your npm registry or install it from your internal source
-
-## Publishing to Internal NPM (Optional)
-
-If you want to publish this as an npm package:
-
-1. **Update package.json** with your organization scope:
-
-   ```json
-   {
-     "name": "@your-org/wrhs-next-mcp",
-     "version": "1.0.0"
-   }
-   ```
-
-2. **Publish to internal registry:**
-
-   ```bash
-   npm publish --registry=https://your-internal-registry.com
-   ```
-
-3. **Team members can then install globally:**
-
-   ```bash
-   npm install -g @your-org/wrhs-next-mcp
-   ```
-
-4. **Cursor config becomes simpler:**
-   ```json
-   {
-     "mcpServers": {
-       "wrhs-api": {
-         "command": "npx",
-         "args": ["@your-org/wrhs-next-mcp"],
-         "env": {
-           "WRHS_NEXT_ENDPOINT": "https://your-warehouse-api.com",
-           "WRHS_NEXT_USERNAME": "their-username",
-           "WRHS_NEXT_PASSWORD": "their-password"
-         }
-       }
-     }
-   }
-   ```
 
 ## Security Notes
 
@@ -312,4 +294,8 @@ For issues or questions:
 
 - Check the [Troubleshooting](#troubleshooting) section
 - Review MCP logs in Cursor settings
-- Contact your team's Warehouse.ai administrator
+
+**Resources:**
+
+- [MCP Documentation](https://modelcontextprotocol.io)
+- [MCP SDK GitHub](https://github.com/modelcontextprotocol/sdk)
