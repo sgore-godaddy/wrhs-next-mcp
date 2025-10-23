@@ -1,6 +1,44 @@
 # Changelog
 
-## [Updated] - October 23, 2025
+## [v0.2.0] - October 23, 2025
+
+### Added
+
+**Smart Package Lookup with Automatic @ux/ Prefix Retry**
+
+- Automatically retries package lookups with `@ux/` prefix when package is not found
+- Works across all tools: `get_object`, `get_head`, `list_versions`, `list_environments`, `get_environment_details`
+- Example: If "application-sidebar" is not found, automatically tries "@ux/application-sidebar"
+- Provides informative error messages showing both attempts when both fail
+- Only retries on 404/not found errors, not on authentication or other errors
+- Skips retry if package name already starts with `@ux/`
+
+#### Implementation Details
+
+- Added `retryWithUxPrefix()` helper function that wraps all API calls
+- Detects 404 errors via status code or error message
+- Logs retry attempts to stderr for debugging
+- Full test coverage with 5 new test cases covering:
+  - Successful retry with @ux/ prefix
+  - No retry when package already has @ux/ prefix
+  - No retry for non-404 errors
+  - Informative error when both attempts fail
+
+#### Test Coverage
+
+- Added 5 new tests for retry logic
+- Overall test coverage: **89%** (up from 86%)
+- All 23 tests passing
+
+#### Documentation
+
+- Updated README with new feature in Features section
+- Added usage example demonstrating automatic prefix retry
+- Build size: 10.17 KB
+
+---
+
+## [v0.1.0] - October 23, 2025
 
 ### Changed - SDK Integration Update
 

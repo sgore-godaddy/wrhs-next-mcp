@@ -47,6 +47,47 @@ const sdk = new WarehouseSDK({
 const objectAPI = new ObjectAPI({ request: sdk._request });
 const envAPI = new EnvAPI({ request: sdk._request });
 
+/**
+ * Helper function to automatically retry API calls with @ux/ prefix if package not found
+ * @param apiCall - The API function to call
+ * @param packageName - The package name to query
+ * @param params - Additional parameters for the API call
+ * @returns The API response
+ */
+async function retryWithUxPrefix<T>(
+  apiCall: (params: any) => Promise<T>,
+  packageName: string,
+  params: any = {}
+): Promise<T> {
+  try {
+    // Try the original package name first
+    return await apiCall({ ...params, name: packageName });
+  } catch (error: any) {
+    // Check if this looks like a "not found" error and the package doesn't already have @ux/ prefix
+    const isNotFoundError =
+      error.status === 404 ||
+      error.statusCode === 404 ||
+      error.message?.includes("not found") ||
+      error.message?.includes("404");
+
+    if (isNotFoundError && !packageName.startsWith("@ux/")) {
+      try {
+        // Retry with @ux/ prefix
+        const uxPrefixedName = `@ux/${packageName}`;
+        console.error(`Package '${packageName}' not found, retrying with '${uxPrefixedName}'...`);
+        return await apiCall({ ...params, name: uxPrefixedName });
+      } catch (retryError: any) {
+        // If retry also fails, throw an error mentioning both attempts
+        throw new Error(
+          `Package not found. Tried both '${packageName}' and '@ux/${packageName}': ${retryError.message || "Unknown error"}`
+        );
+      }
+    }
+    // If not a "not found" error, or already has @ux/ prefix, just throw the original error
+    throw error;
+  }
+}
+
 // Create MCP server
 const server = new Server(
   {
@@ -217,12 +258,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         throw new Error("Both name and env are required");
       }
 
-      // Call the API client method
-      const params: any = { name: objectName, env };
+      // Build params (excluding 'name' as it's handled by retryWithUxPrefix)
+      const params: any = { env };
       if (acceptedVariants) params.acceptedVariants = acceptedVariants;
       if (version) params.version = version;
 
-      const response = await objectAPI.get(params);
+      // Call with automatic @ux/ prefix retry
+      const response = await retryWithUxPrefix((p) => objectAPI.get(p), objectName, params);
 
       return {
         content: [
@@ -239,11 +281,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         throw new Error("Both name and env are required");
       }
 
-      // Call the API client method
-      const response = await objectAPI.getHead({
-        name: objectName,
-        env,
-      });
+      // Call with automatic @ux/ prefix retry
+      const response = await retryWithUxPrefix((p) => objectAPI.getHead(p), objectName, { env });
 
       return {
         content: [
@@ -260,10 +299,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         throw new Error("name is required");
       }
 
-      // Call the API client method
-      const response = await objectAPI.listVersions({
-        name: objectName,
-      });
+      // Call with automatic @ux/ prefix retry
+      const response = await retryWithUxPrefix((p) => objectAPI.listVersions(p), objectName);
 
       return {
         content: [
@@ -280,10 +317,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         throw new Error("name is required");
       }
 
-      // Call the API client method
-      const response = await envAPI.list({
-        name: objectName,
-      });
+      // Call with automatic @ux/ prefix retry
+      const response = await retryWithUxPrefix((p) => envAPI.list(p), objectName);
 
       return {
         content: [
@@ -300,11 +335,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         throw new Error("Both name and env are required");
       }
 
-      // Call the API client method
-      const response = await envAPI.get({
-        name: objectName,
-        env,
-      });
+      // Call with automatic @ux/ prefix retry
+      const response = await retryWithUxPrefix((p) => envAPI.get(p), objectName, { env });
 
       return {
         content: [

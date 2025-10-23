@@ -6,6 +6,40 @@ An MCP (Model Context Protocol) server that exposes Warehouse.ai API endpoints a
 
 MCP (Model Context Protocol) allows AI assistants to interact with external systems through standardized tools. This server makes your Warehouse.ai API accessible to AI assistants, enabling them to fetch data on your behalf.
 
+## QuickStart
+
+### Setup
+
+Follow the [Installation](#installation) instructions below to configure the MCP server in Cursor.
+
+### Usage Examples
+
+Once installed, you can ask your AI assistant in Cursor questions like:
+
+**Check versions across environments:**
+
+- "What is the warehouse version for @ux/application-sidebar in prod?"
+- "What version of no-header is in test env?"
+- "Compare the version of utility-header in dev vs production"
+- "Which version for application-sidebar is at head in wrhs?" (automatically looks up @ux/application-sidebar)
+
+**Discover available versions:**
+
+- "What versions of @ux/application-sidebar are available?"
+- "Show me all versions of no-header"
+- "List the version history for @ux/application-sidebar"
+
+**Find where packages are deployed:**
+
+- "Where is @ux/application-sidebar deployed?"
+- "What environments have the no-header package?"
+- "Is @ux/button in production?"
+
+**Get detailed information:**
+
+- "Show me environment details for @ux/application-sidebar in prod"
+- "Get the configuration for no-header in test"
+
 ## Features
 
 - 📦 **Query package versions** - Check which versions are deployed in dev, test, or production
@@ -13,53 +47,7 @@ MCP (Model Context Protocol) allows AI assistants to interact with external syst
 - 🌍 **Discover environments** - Find out where packages are deployed
 - 📊 **Get environment details** - View environment-specific configurations
 - 🔄 **Compare deployments** - Easily compare what's in different environments
-
-## Available Tools
-
-### `get_object`
-
-Fetches object data from the Warehouse API.
-
-**Parameters:**
-
-- `name` (string, required): The name of the object to retrieve
-- `env` (string, required): The environment (e.g., development, staging, production)
-- `acceptedVariants` (array, optional): Array of accepted variants (e.g., ['en-US', 'en-GB'])
-- `version` (string, optional): Specific version of the object (e.g., '1.0.0')
-
-### `get_head`
-
-Fetches head information for a specific name and environment (metadata without full object download).
-
-**Parameters:**
-
-- `name` (string, required): The name of the object
-- `env` (string, required): The environment (e.g., development, staging, production)
-
-### `list_versions`
-
-Lists all available versions for a specific package.
-
-**Parameters:**
-
-- `name` (string, required): The name of the package (e.g., '@ux/application-sidebar')
-
-### `list_environments`
-
-Lists all environments where a specific package is deployed.
-
-**Parameters:**
-
-- `name` (string, required): The name of the package (e.g., '@ux/application-sidebar')
-
-### `get_environment_details`
-
-Fetches detailed information about a package in a specific environment, including metadata and configuration.
-
-**Parameters:**
-
-- `name` (string, required): The name of the package (e.g., '@ux/application-sidebar')
-- `env` (string, required): The environment (e.g., development, staging, production)
+- 🎯 **Smart package lookup** - Automatically retries with `@ux/` prefix if package not found (e.g., "application-sidebar" → "@ux/application-sidebar")
 
 ## Installation
 
@@ -115,6 +103,53 @@ npm install
 npm run build
 # Restart Cursor
 ```
+
+## Available Tools
+
+### `get_object`
+
+Fetches object data from the Warehouse API.
+
+**Parameters:**
+
+- `name` (string, required): The name of the object to retrieve
+- `env` (string, required): The environment (e.g., development, staging, production)
+- `acceptedVariants` (array, optional): Array of accepted variants (e.g., ['en-US', 'en-GB'])
+- `version` (string, optional): Specific version of the object (e.g., '1.0.0')
+
+### `get_head`
+
+Fetches head information for a specific name and environment (metadata without full object download).
+
+**Parameters:**
+
+- `name` (string, required): The name of the object
+- `env` (string, required): The environment (e.g., development, staging, production)
+
+### `list_versions`
+
+Lists all available versions for a specific package.
+
+**Parameters:**
+
+- `name` (string, required): The name of the package (e.g., '@ux/application-sidebar')
+
+### `list_environments`
+
+Lists all environments where a specific package is deployed.
+
+**Parameters:**
+
+- `name` (string, required): The name of the package (e.g., '@ux/application-sidebar')
+
+### `get_environment_details`
+
+Fetches detailed information about a package in a specific environment, including metadata and configuration.
+
+**Parameters:**
+
+- `name` (string, required): The name of the package (e.g., '@ux/application-sidebar')
+- `env` (string, required): The environment (e.g., development, staging, production)
 
 ## Development
 

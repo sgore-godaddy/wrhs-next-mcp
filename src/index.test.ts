@@ -409,6 +409,135 @@ describe("Warehouse MCP Server", () => {
         expect(result.content[0].text).toContain("Unknown tool");
       });
     });
+
+    describe("@ux/ Prefix Retry Logic", () => {
+      it("should retry with @ux/ prefix when package not found (get_head)", async () => {
+        // First call fails with 404
+        const notFoundError = new Error("Not found");
+        (notFoundError as any).status = 404;
+        mockObjectAPI.getHead
+          .mockRejectedValueOnce(notFoundError)
+          .mockResolvedValueOnce({ headVersion: "1.0.0" });
+
+        const request = {
+          params: {
+            name: "get_head",
+            arguments: {
+              name: "application-sidebar",
+              env: "production",
+            },
+          },
+        };
+
+        const result = await callToolHandler(request);
+
+        // Should have been called twice: once with original name, once with @ux/ prefix
+        expect(mockObjectAPI.getHead).toHaveBeenCalledTimes(2);
+        expect(mockObjectAPI.getHead).toHaveBeenNthCalledWith(1, {
+          name: "application-sidebar",
+          env: "production",
+        });
+        expect(mockObjectAPI.getHead).toHaveBeenNthCalledWith(2, {
+          name: "@ux/application-sidebar",
+          env: "production",
+        });
+
+        // Should return success from the retry
+        expect(result.isError).toBeUndefined();
+        expect(result.content[0].text).toContain("1.0.0");
+      });
+
+      it("should retry with @ux/ prefix when package not found (list_versions)", async () => {
+        const notFoundError = new Error("Package not found");
+        (notFoundError as any).statusCode = 404;
+        mockObjectAPI.listVersions
+          .mockRejectedValueOnce(notFoundError)
+          .mockResolvedValueOnce(["1.0.0", "1.1.0"]);
+
+        const request = {
+          params: {
+            name: "list_versions",
+            arguments: {
+              name: "no-header",
+            },
+          },
+        };
+
+        const result = await callToolHandler(request);
+
+        expect(mockObjectAPI.listVersions).toHaveBeenCalledTimes(2);
+        expect(mockObjectAPI.listVersions).toHaveBeenNthCalledWith(1, { name: "no-header" });
+        expect(mockObjectAPI.listVersions).toHaveBeenNthCalledWith(2, { name: "@ux/no-header" });
+        expect(result.isError).toBeUndefined();
+      });
+
+      it("should not retry if package already has @ux/ prefix", async () => {
+        const notFoundError = new Error("Not found");
+        (notFoundError as any).status = 404;
+        mockObjectAPI.getHead.mockRejectedValue(notFoundError);
+
+        const request = {
+          params: {
+            name: "get_head",
+            arguments: {
+              name: "@ux/non-existent-package",
+              env: "production",
+            },
+          },
+        };
+
+        const result = await callToolHandler(request);
+
+        // Should only be called once since it already has @ux/ prefix
+        expect(mockObjectAPI.getHead).toHaveBeenCalledTimes(1);
+        expect(result.isError).toBe(true);
+      });
+
+      it("should not retry for non-404 errors", async () => {
+        const authError = new Error("Unauthorized");
+        (authError as any).status = 401;
+        mockObjectAPI.getHead.mockRejectedValue(authError);
+
+        const request = {
+          params: {
+            name: "get_head",
+            arguments: {
+              name: "application-sidebar",
+              env: "production",
+            },
+          },
+        };
+
+        const result = await callToolHandler(request);
+
+        // Should only be called once since it's not a 404 error
+        expect(mockObjectAPI.getHead).toHaveBeenCalledTimes(1);
+        expect(result.isError).toBe(true);
+        expect(result.content[0].text).toContain("Unauthorized");
+      });
+
+      it("should return informative error when both attempts fail", async () => {
+        const notFoundError = new Error("Not found");
+        (notFoundError as any).status = 404;
+        mockObjectAPI.listVersions.mockRejectedValue(notFoundError);
+
+        const request = {
+          params: {
+            name: "list_versions",
+            arguments: {
+              name: "non-existent",
+            },
+          },
+        };
+
+        const result = await callToolHandler(request);
+
+        expect(mockObjectAPI.listVersions).toHaveBeenCalledTimes(2);
+        expect(result.isError).toBe(true);
+        expect(result.content[0].text).toContain("non-existent");
+        expect(result.content[0].text).toContain("@ux/non-existent");
+      });
+    });
   });
 
   describe("SDK Initialization", () => {
