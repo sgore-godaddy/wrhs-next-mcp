@@ -157,7 +157,16 @@ This compiles TypeScript to JavaScript in the `dist/` directory.
 
 ## Testing
 
-### Method 1: MCP Inspector (Recommended for Development)
+### Method 1: Testing in Cursor
+
+1. Ensure the server is configured in Cursor (see Installation)
+2. Restart Cursor
+3. Check MCP connection status in **Settings... → Cursor Settings → Tools & MCP**
+4. Test by asking Cursor:
+   - "Use the wrhs-api to get object named 'test'"
+   - "Fetch head information for 'myapp' in 'production' environment"
+
+### Method 2: MCP Inspector (Recommended for Development)
 
 Install the MCP Inspector globally:
 
@@ -176,15 +185,6 @@ This opens a web UI where you can:
 - See all available tools
 - Test tool calls with different parameters
 - View responses in real-time
-
-### Method 2: Testing in Cursor
-
-1. Ensure the server is configured in Cursor (see Installation)
-2. Restart Cursor
-3. Check MCP connection status in **Settings... → Cursor Settings → Tools & MCP**
-4. Test by asking Cursor:
-   - "Use the wrhs-api to get object named 'test'"
-   - "Fetch head information for 'myapp' in 'production' environment"
 
 ### Method 3: Log-Based Debugging
 
