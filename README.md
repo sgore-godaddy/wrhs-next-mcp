@@ -37,6 +37,8 @@ Once installed, you can ask your AI assistant in Cursor questions like:
 
 **Get detailed information:**
 
+- "List all the files in @ux/application-sidebar in wrhs prod in \_default variant"
+- "Compare and tell me the differences for the application-sidebar.css file in @ux/application-sidebar in wrhs between versions 7.2.0 and 7.0.0 in test env."
 - "Show me environment details for @ux/application-sidebar in prod"
 - "Get the configuration for no-header in test"
 

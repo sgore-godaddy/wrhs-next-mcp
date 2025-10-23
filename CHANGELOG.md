@@ -1,5 +1,25 @@
 # Changelog
 
+## [v0.2.1] - October 23, 2025
+
+### Fixed
+
+**Environment Name Normalization**
+
+- Fixed issue where tool descriptions incorrectly instructed to use `'staging'` for test environment
+- Added `normalizeEnvironment()` helper function that automatically maps `'staging'` to `'test'`
+- Updated all tool descriptions to correctly specify `'test'` instead of `'staging'`
+- Now accepts both `'test'` and `'staging'` as input, but always uses `'test'` for API calls
+- Applies to tools: `get_object`, `get_head`, `get_environment_details`
+
+#### Changes
+
+- Tool descriptions now say: `"use 'development' for dev, 'test' for test, or 'production' for prod"`
+- Added environment normalization in all handlers before making API calls
+- Build size: 10.49 KB
+
+---
+
 ## [v0.2.0] - October 23, 2025
 
 ### Added

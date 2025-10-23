@@ -48,6 +48,19 @@ const objectAPI = new ObjectAPI({ request: sdk._request });
 const envAPI = new EnvAPI({ request: sdk._request });
 
 /**
+ * Normalize environment names to match warehouse.ai expectations
+ * Maps 'staging' to 'test' since staging environment doesn't exist
+ * @param env - The environment name from user input
+ * @returns The normalized environment name
+ */
+function normalizeEnvironment(env: string): string {
+  if (env === "staging") {
+    return "test";
+  }
+  return env;
+}
+
+/**
  * Helper function to automatically retry API calls with @ux/ prefix if package not found
  * @param apiCall - The API function to call
  * @param packageName - The package name to query
@@ -121,7 +134,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             env: {
               type: "string",
               description:
-                "The environment: use 'development' for dev, 'staging' for test, or 'production' for prod",
+                "The environment: use 'development' for dev, 'test' for test, or 'production' for prod",
             },
             acceptedVariants: {
               type: "array",
@@ -146,7 +159,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           "USE THIS TOOL when users ask questions like:\n" +
           "- 'What is the warehouse version for [package]?'\n" +
           "- 'What version of [package] is in wrhs?'\n" +
-          "- 'Tell me which version of [package] is available in dev/prod/staging'\n" +
+          "- 'Tell me which version of [package] is available in dev/prod/test'\n" +
           "- 'What is in warehouse for [package]?'\n\n" +
           "Returns headVersion (current deployed version) and latestVersion without downloading the full package data, making it much faster than get_object for version checks.",
         inputSchema: {
@@ -159,7 +172,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             env: {
               type: "string",
               description:
-                "The environment: use 'development' for dev, 'staging' for test, or 'production' for prod",
+                "The environment: use 'development' for dev, 'test' for test, or 'production' for prod",
             },
           },
           required: ["name", "env"],
@@ -226,7 +239,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             env: {
               type: "string",
               description:
-                "The environment: use 'development' for dev, 'staging' for test, or 'production' for prod",
+                "The environment: use 'development' for dev, 'test' for test, or 'production' for prod",
             },
           },
           required: ["name", "env"],
@@ -258,8 +271,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         throw new Error("Both name and env are required");
       }
 
+      // Normalize environment (staging -> test)
+      const normalizedEnv = normalizeEnvironment(env);
+
       // Build params (excluding 'name' as it's handled by retryWithUxPrefix)
-      const params: any = { env };
+      const params: any = { env: normalizedEnv };
       if (acceptedVariants) params.acceptedVariants = acceptedVariants;
       if (version) params.version = version;
 
@@ -281,8 +297,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         throw new Error("Both name and env are required");
       }
 
+      // Normalize environment (staging -> test)
+      const normalizedEnv = normalizeEnvironment(env);
+
       // Call with automatic @ux/ prefix retry
-      const response = await retryWithUxPrefix((p) => objectAPI.getHead(p), objectName, { env });
+      const response = await retryWithUxPrefix((p) => objectAPI.getHead(p), objectName, {
+        env: normalizedEnv,
+      });
 
       return {
         content: [
@@ -335,8 +356,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         throw new Error("Both name and env are required");
       }
 
+      // Normalize environment (staging -> test)
+      const normalizedEnv = normalizeEnvironment(env);
+
       // Call with automatic @ux/ prefix retry
-      const response = await retryWithUxPrefix((p) => envAPI.get(p), objectName, { env });
+      const response = await retryWithUxPrefix((p) => envAPI.get(p), objectName, {
+        env: normalizedEnv,
+      });
 
       return {
         content: [
