@@ -7,6 +7,7 @@ Your MCP server for Warehouse.ai API is ready to use. Here's what was built:
 ## 📦 What's Included
 
 ### Core Files
+
 - **`src/index.ts`** - Main MCP server implementation
   - Imports `warehouse.ai-api-client` package
   - Exposes 2 tools: `get_object` and `get_head`
@@ -23,18 +24,19 @@ Your MCP server for Warehouse.ai API is ready to use. Here's what was built:
   - Ready to use with Cursor
 
 ### Configuration Files
+
 - **`.env.example`** - Template for API credentials
 - **`.gitignore`** - Excludes node_modules, dist, .env
 - **`tsconfig.json`** - TypeScript config for IDE support
 
 ### Documentation
+
 - **`README.md`** - Comprehensive documentation (2500+ words)
   - Installation instructions for team
   - Development guide
   - Testing strategies
   - Troubleshooting section
   - Distribution options
-  
 - **`QUICKSTART.md`** - Get started in 5 minutes
   - Immediate setup steps
   - Cursor configuration
@@ -43,30 +45,35 @@ Your MCP server for Warehouse.ai API is ready to use. Here's what was built:
 ## 🎯 Available MCP Tools
 
 ### 1. `get_object`
+
 **Purpose:** Fetch object data from Warehouse API
 
 **Usage in Cursor:**
 "Get the object named 'my-package' in 'development' environment"
 
 **Parameters:**
+
 - `name` (string) - Object identifier
 - `env` (string) - Environment (development, staging, production)
 - `acceptedVariants` (array, optional) - Accepted variants (e.g., ['en-US'])
 - `version` (string, optional) - Specific version (e.g., '1.0.0')
 
 ### 2. `get_head`
+
 **Purpose:** Fetch head information (metadata) for specific name and environment
 
 **Usage in Cursor:**
 "Get head data for 'app-name' in 'production' environment"
 
 **Parameters:**
+
 - `name` (string) - Object name
 - `env` (string) - Environment (development, staging, production)
 
 ## 🚀 Quick Start (3 Steps)
 
 ### Step 1: Configure Cursor
+
 Add to Cursor Settings → Features → Model Context Protocol:
 
 ```json
@@ -86,14 +93,17 @@ Add to Cursor Settings → Features → Model Context Protocol:
 ```
 
 ### Step 2: Restart Cursor
+
 Close and reopen Cursor completely.
 
 ### Step 3: Test
+
 Ask Cursor: "Use wrhs-api to get object named 'test' in 'development' environment"
 
 ## 🔧 Development Workflow
 
 ### Making Changes
+
 ```bash
 # 1. Edit source
 vim src/index.ts
@@ -109,6 +119,7 @@ mcp-inspector node dist/index.js
 ```
 
 ### Adding New Tools
+
 To add more API endpoints:
 
 1. Edit `src/index.ts`
@@ -117,6 +128,7 @@ To add more API endpoints:
 4. Rebuild and restart Cursor
 
 **Example structure:**
+
 ```typescript
 // In ListToolsRequestSchema handler:
 {
@@ -146,6 +158,7 @@ if (name === "new_tool") {
 ### Option 1: GitHub (Recommended)
 
 **You (maintainer):**
+
 ```bash
 git add .
 git commit -m "Initial MCP server for Warehouse.ai API"
@@ -154,6 +167,7 @@ git push -u origin main
 ```
 
 **Team members:**
+
 ```bash
 git clone https://github.com/your-org/wrhs-next-mcp.git
 cd wrhs-next-mcp
@@ -165,23 +179,28 @@ npm run build
 ### Option 2: Internal NPM
 
 If you publish to internal registry:
+
 ```bash
 npm publish --registry=https://your-registry.com
 ```
 
 Team installs globally:
+
 ```bash
 npm install -g @your-org/wrhs-next-mcp
 ```
 
 Simpler Cursor config:
+
 ```json
 {
   "mcpServers": {
     "wrhs-api": {
       "command": "npx",
       "args": ["@your-org/wrhs-next-mcp"],
-      "env": { /* credentials */ }
+      "env": {
+        /* credentials */
+      }
     }
   }
 }
@@ -190,28 +209,34 @@ Simpler Cursor config:
 ## 🧪 Testing Options
 
 ### 1. MCP Inspector (Best for Development)
+
 ```bash
 npm install -g @modelcontextprotocol/inspector
 export WRHS_NEXT_ENDPOINT="..." WRHS_NEXT_USERNAME="..." WRHS_NEXT_PASSWORD="..."
 mcp-inspector node dist/index.js
 ```
+
 Opens web UI at http://localhost:5173
 
-**Pros:** 
+**Pros:**
+
 - Visual interface
 - Test without Cursor
 - See raw requests/responses
 - Faster iteration
 
 ### 2. Cursor Integration Testing
+
 Configure in Cursor → restart → ask questions
 
 **Pros:**
+
 - Real-world usage
 - Tests full integration
 - See AI interpretation
 
 ### 3. Log-Based Debugging
+
 Add `console.error("Debug:", data)` in code
 Check Cursor MCP logs
 
@@ -238,11 +263,13 @@ AI uses data to answer user
 ## 🔐 Security
 
 **Credentials:** Never committed to git
+
 - Each user provides own credentials in Cursor config
 - `.env` is gitignored
 - `.env.example` has placeholders only
 
 **Read-Only:** Currently only GET endpoints exposed
+
 - Safe for exploration
 - No data modification risk
 
@@ -259,6 +286,7 @@ AI uses data to answer user
 ## 🐛 Troubleshooting
 
 ### Server won't start
+
 ```bash
 # Check build succeeded
 npm run build
@@ -269,12 +297,14 @@ node dist/index.js
 ```
 
 ### Tools not appearing in Cursor
+
 1. Check absolute path in config is correct
 2. Verify credentials in env variables
 3. Check Cursor MCP logs for errors
 4. Try MCP Inspector to isolate issue
 
 ### warehouse.ai-api-client not found
+
 ```bash
 # Check if package is installed
 npm list warehouse.ai-api-client
@@ -287,7 +317,7 @@ npm install
 
 **Key Concepts:**
 
-1. **Server Lifecycle:** 
+1. **Server Lifecycle:**
    - Cursor starts MCP server as subprocess
    - Runs while Cursor is open
    - Auto-terminates with Cursor
@@ -310,16 +340,19 @@ npm install
 ## 📈 Next Steps
 
 **Immediate:**
+
 - [ ] Add to Cursor and test
 - [ ] Push to GitHub
 - [ ] Share with first team member
 
 **Short-term:**
+
 - [ ] Add more API endpoints as tools
 - [ ] Document your API endpoints for the team
 - [ ] Create examples of useful queries
 
 **Long-term:**
+
 - [ ] Add write operations (POST/PUT/DELETE)
 - [ ] Implement caching for performance
 - [ ] Add rate limiting
@@ -328,12 +361,14 @@ npm install
 ## 📞 Getting Help
 
 **Resources:**
+
 - [MCP Documentation](https://modelcontextprotocol.io)
 - [MCP SDK GitHub](https://github.com/modelcontextprotocol/sdk)
 - `README.md` in this repo
 - `QUICKSTART.md` for quick reference
 
 **For Issues:**
+
 1. Check Cursor's MCP logs
 2. Test with MCP Inspector
 3. Review console.error() logs
@@ -342,6 +377,7 @@ npm install
 ## ✨ Success Criteria
 
 You've successfully created an MCP server when:
+
 - ✅ Built successfully with `npm run build`
 - ✅ Shows "connected" in Cursor MCP settings
 - ✅ Tools appear when AI tries to use them
@@ -352,7 +388,6 @@ You've successfully created an MCP server when:
 
 ---
 
-*Generated: October 23, 2025*
-*Implementation Time: ~5 minutes*
-*Production Ready: Yes*
-
+_Generated: October 23, 2025_
+_Implementation Time: ~5 minutes_
+_Production Ready: Yes_

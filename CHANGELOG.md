@@ -27,13 +27,14 @@
 
 Changed all environment variable names for better clarity:
 
-| Old Name | New Name |
-|----------|----------|
+| Old Name       | New Name             |
+| -------------- | -------------------- |
 | `API_BASE_URL` | `WRHS_NEXT_ENDPOINT` |
 | `API_USERNAME` | `WRHS_NEXT_USERNAME` |
 | `API_PASSWORD` | `WRHS_NEXT_PASSWORD` |
 
 **Updated in:**
+
 - `src/index.ts` - Main server code
 - `.env.example` - Configuration template
 - `README.md` - All occurrences in documentation
@@ -43,6 +44,7 @@ Changed all environment variable names for better clarity:
 #### Documentation Updates
 
 All documentation now reflects:
+
 - Correct SDK usage pattern
 - New environment variable names
 - Enhanced `get_object` parameters
@@ -54,6 +56,7 @@ All documentation now reflects:
 
 1. **Update Cursor MCP Configuration:**
    Replace old environment variable names with new ones:
+
    ```json
    {
      "mcpServers": {
@@ -101,4 +104,3 @@ All documentation now reflects:
 - Comprehensive documentation (README, QUICKSTART, IMPLEMENTATION_SUMMARY)
 - Environment variable configuration
 - Git repository initialization
-

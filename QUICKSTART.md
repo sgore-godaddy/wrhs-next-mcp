@@ -23,8 +23,9 @@ Open Cursor Settings → Features → Model Context Protocol and add this config
 ```
 
 **Replace with your actual:**
+
 - WRHS_NEXT_ENDPOINT
-- WRHS_NEXT_USERNAME  
+- WRHS_NEXT_USERNAME
 - WRHS_NEXT_PASSWORD
 
 ### 2. Restart Cursor
@@ -34,6 +35,7 @@ Close and reopen Cursor completely.
 ### 3. Test It
 
 In Cursor, try asking:
+
 - "Use the wrhs-api to get object named 'test' in 'development' environment"
 - "Fetch head information for 'myapp' in 'dev' environment"
 
@@ -83,6 +85,7 @@ npm run build
 ### Option 1: GitHub (Recommended)
 
 1. Push to GitHub:
+
    ```bash
    git init
    git add .
@@ -92,6 +95,7 @@ npm run build
    ```
 
 2. Team members clone and setup:
+
    ```bash
    git clone https://github.com/your-org/wrhs-next-mcp.git
    cd wrhs-next-mcp
@@ -110,15 +114,18 @@ See main README.md for publishing instructions.
 ## Common Issues
 
 **"warehouse.ai-api-client not found"**
+
 - Make sure the package is accessible in your npm registry
 - Check package.json dependencies
 
 **"Server not connecting"**
+
 - Verify absolute path in Cursor config
 - Check credentials are correct
 - Look at Cursor's MCP logs for errors
 
 **"Changes not appearing"**
+
 - Run `npm run build` after changes
 - Completely restart Cursor (not just reload window)
 
@@ -141,7 +148,6 @@ See main README.md for publishing instructions.
 ✅ Basic authentication support  
 ✅ Ready to use in Cursor  
 ✅ Easy to share with team  
-✅ Extensible for future endpoints  
+✅ Extensible for future endpoints
 
 You're done! 🎉
-

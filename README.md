@@ -16,18 +16,22 @@ MCP (Model Context Protocol) allows AI assistants to interact with external syst
 ## Available Tools
 
 ### `get_object`
+
 Fetches object data from the Warehouse API.
 
 **Parameters:**
+
 - `name` (string, required): The name of the object to retrieve
 - `env` (string, required): The environment (e.g., development, staging, production)
 - `acceptedVariants` (array, optional): Array of accepted variants (e.g., ['en-US', 'en-GB'])
 - `version` (string, optional): Specific version of the object (e.g., '1.0.0')
 
 ### `get_head`
+
 Fetches head information for a specific name and environment (metadata without full object download).
 
 **Parameters:**
+
 - `name` (string, required): The name of the object
 - `env` (string, required): The environment (e.g., development, staging, production)
 
@@ -36,25 +40,28 @@ Fetches head information for a specific name and environment (metadata without f
 ### For Team Members (GitHub Clone)
 
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/your-org/wrhs-next-mcp.git
    cd wrhs-next-mcp
    ```
 
 2. **Install dependencies:**
+
    ```bash
    npm install
    ```
 
 3. **Build the project:**
+
    ```bash
    npm run build
    ```
 
 4. **Configure Cursor:**
-   
+
    Add the following to your Cursor MCP settings (Settings → Features → Model Context Protocol):
-   
+
    ```json
    {
      "mcpServers": {
@@ -70,7 +77,7 @@ Fetches head information for a specific name and environment (metadata without f
      }
    }
    ```
-   
+
    **Important:** Replace `/absolute/path/to/wrhs-next-mcp` with the actual path where you cloned the repo.
 
 5. **Restart Cursor** to load the MCP server.
@@ -89,7 +96,7 @@ npm run build
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
 - Access to Warehouse.ai API
 
@@ -98,11 +105,13 @@ npm run build
 1. Clone and install dependencies (see above)
 
 2. **Create environment file:**
+
    ```bash
    cp .env.example .env
    ```
-   
+
    Edit `.env` and add your credentials:
+
    ```
    WRHS_NEXT_ENDPOINT=https://your-warehouse-api.com
    WRHS_NEXT_USERNAME=your-username
@@ -127,16 +136,19 @@ This compiles TypeScript to JavaScript in the `dist/` directory.
 ### Method 1: MCP Inspector (Recommended for Development)
 
 Install the MCP Inspector globally:
+
 ```bash
 npm install -g @modelcontextprotocol/inspector
 ```
 
 Run the inspector:
+
 ```bash
 mcp-inspector node dist/index.js
 ```
 
 This opens a web UI where you can:
+
 - See all available tools
 - Test tool calls with different parameters
 - View responses in real-time
@@ -146,13 +158,26 @@ This opens a web UI where you can:
 1. Ensure the server is configured in Cursor (see Installation)
 2. Restart Cursor
 3. Check MCP connection status in Settings → Features → Model Context Protocol
-4. Test by asking Cursor: 
+4. Test by asking Cursor:
    - "Use the wrhs-api to get object named 'test'"
    - "Fetch head information for 'myapp' in 'production' environment"
 
 ### Method 3: Log-Based Debugging
 
 Add `console.error()` statements in `src/index.ts` for debugging. These logs appear in Cursor's MCP logs.
+
+### Unit Tests & Code Quality
+
+For information about unit testing, linting, and code quality tools, see **[TESTING.md](TESTING.md)**.
+
+Quick commands:
+
+```bash
+npm test              # Run unit tests
+npm run test:coverage # Run with coverage
+npm run lint          # Check code quality
+npm run validate      # Run all checks
+```
 
 ## Project Structure
 
@@ -183,24 +208,29 @@ wrhs-next-mcp/
 ## Troubleshooting
 
 ### "Server not found" error
+
 - **Cause**: Incorrect path in Cursor config
 - **Fix**: Use absolute path (run `pwd` in project directory) and ensure it points to `dist/index.js`
 
 ### "Authentication errors"
+
 - **Cause**: Invalid credentials
 - **Fix**: Verify `WRHS_NEXT_USERNAME` and `WRHS_NEXT_PASSWORD` in Cursor MCP config
 
 ### "No tools showing up"
+
 - **Cause**: Build failed or server crashed
-- **Fix**: 
+- **Fix**:
   1. Run `npm run build` and check for errors
   2. Check Cursor's MCP logs (Settings → Features → Model Context Protocol)
 
 ### "Changes not reflecting"
+
 - **Cause**: Server not reloaded
 - **Fix**: After code changes, run `npm run build` then restart Cursor
 
 ### Missing `warehouse.ai-api-client` package
+
 - **Cause**: Package not installed or not accessible
 - **Fix**: Ensure the package is available in your npm registry or install it from your internal source
 
@@ -209,6 +239,7 @@ wrhs-next-mcp/
 If you want to publish this as an npm package:
 
 1. **Update package.json** with your organization scope:
+
    ```json
    {
      "name": "@your-org/wrhs-next-mcp",
@@ -217,11 +248,13 @@ If you want to publish this as an npm package:
    ```
 
 2. **Publish to internal registry:**
+
    ```bash
    npm publish --registry=https://your-internal-registry.com
    ```
 
 3. **Team members can then install globally:**
+
    ```bash
    npm install -g @your-org/wrhs-next-mcp
    ```
@@ -276,7 +309,7 @@ ISC
 ## Support
 
 For issues or questions:
+
 - Check the [Troubleshooting](#troubleshooting) section
 - Review MCP logs in Cursor settings
 - Contact your team's Warehouse.ai administrator
-

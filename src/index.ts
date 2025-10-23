@@ -2,10 +2,7 @@
 
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import {
-  CallToolRequestSchema,
-  ListToolsRequestSchema,
-} from "@modelcontextprotocol/sdk/types.js";
+import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import dotenv from "dotenv";
 
 // Load environment variables
@@ -77,11 +74,13 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           properties: {
             name: {
               type: "string",
-              description: "The name of the package/object to retrieve (e.g., '@ux/application-sidebar')",
+              description:
+                "The name of the package/object to retrieve (e.g., '@ux/application-sidebar')",
             },
             env: {
               type: "string",
-              description: "The environment: use 'development' for dev, 'staging' for test, or 'production' for prod",
+              description:
+                "The environment: use 'development' for dev, 'staging' for test, or 'production' for prod",
             },
             acceptedVariants: {
               type: "array",
@@ -92,7 +91,8 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             },
             version: {
               type: "string",
-              description: "Optional specific version of the object (e.g., '1.0.0'). If not provided, returns the latest version.",
+              description:
+                "Optional specific version of the object (e.g., '1.0.0'). If not provided, returns the latest version.",
             },
           },
           required: ["name", "env"],
@@ -117,7 +117,8 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             },
             env: {
               type: "string",
-              description: "The environment: use 'development' for dev, 'staging' for test, or 'production' for prod",
+              description:
+                "The environment: use 'development' for dev, 'staging' for test, or 'production' for prod",
             },
           },
           required: ["name", "env"],
@@ -183,7 +184,8 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             },
             env: {
               type: "string",
-              description: "The environment: use 'development' for dev, 'staging' for test, or 'production' for prod",
+              description:
+                "The environment: use 'development' for dev, 'staging' for test, or 'production' for prod",
             },
           },
           required: ["name", "env"],
@@ -199,18 +201,18 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
   try {
     if (name === "get_object") {
-      const { 
-        name: objectName, 
-        env, 
-        acceptedVariants, 
-        version 
-      } = args as { 
-        name: string; 
-        env: string; 
-        acceptedVariants?: string[]; 
+      const {
+        name: objectName,
+        env,
+        acceptedVariants,
+        version,
+      } = args as {
+        name: string;
+        env: string;
+        acceptedVariants?: string[];
         version?: string;
       };
-      
+
       if (!objectName || !env) {
         throw new Error("Both name and env are required");
       }
@@ -219,7 +221,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       const params: any = { name: objectName, env };
       if (acceptedVariants) params.acceptedVariants = acceptedVariants;
       if (version) params.version = version;
-      
+
       const response = await objectAPI.get(params);
 
       return {
@@ -339,4 +341,3 @@ main().catch((error) => {
   console.error("Fatal error in main():", error);
   process.exit(1);
 });
-
