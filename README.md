@@ -96,6 +96,43 @@ Once installed, you can ask your AI assistant in Cursor questions like:
 
 5. **Restart Cursor** to load the MCP server.
 
+### Adding the MCP Server for Claude Desktop
+
+To use this MCP server with Claude Desktop, follow these steps:
+
+1. **Open Claude Desktop** and go to **Settings**.
+
+2. Navigate to **Developer** tab.
+
+3. Click **Edit Config** button. This will open the folder containing the configuration file in Finder.
+
+4. Open the configuration file (typically `claude_desktop_config.json`) and add the MCP server configuration:
+
+   ```json
+   {
+     "mcpServers": {
+       "wrhs-next-api": {
+         "command": "node",
+         "args": ["/absolute/path/to/wrhs-next-mcp/dist/index.js"],
+         "env": {
+           "WRHS_NEXT_ENDPOINT": "https://your-warehouse-api.com",
+           "WRHS_NEXT_USERNAME": "your-username",
+           "WRHS_NEXT_PASSWORD": "your-password"
+         }
+       }
+     }
+   }
+   ```
+
+5. **Save** the configuration file.
+
+**Note:**
+
+- Replace `/absolute/path/to/wrhs-next-mcp` with the actual path where you cloned the repository.
+- Use your actual Warehouse API endpoint and credentials.
+
+6. **Restart Claude Desktop** to load the new MCP server configuration.
+
 ### Updating to Latest Version
 
 ```bash
