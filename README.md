@@ -79,7 +79,7 @@ Once installed, you can ask your AI assistant in Cursor questions like:
    ```json
    {
      "mcpServers": {
-       "wrhs-api": {
+       "wrhs-next-api": {
          "command": "node",
          "args": ["/absolute/path/to/wrhs-next-mcp/dist/index.js"],
          "env": {
